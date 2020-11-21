@@ -44,33 +44,44 @@ class NoiseLib(threading.Thread):
                 raw_noise_filenames.append(file)
 
         # 根据文件名读取音频文件
-        raw_noise_data = []
-        distort_noise_data = []
+        NoiseLib.raw_noise_data = []
+        NoiseLib.distort_noise_data = []
         try:
             for filename in raw_noise_filenames:
                 wf1 = wave.open(os.path.join(raw_noise_dir, filename), "rb")
-                raw_noise_data.append(wf1.readframes(
+                NoiseLib.raw_noise_data.append(wf1.readframes(
                     wf1.getparams().nframes))  # 一次性读取所有frame
 
                 wf2 = wave.open(os.path.join(distort_noise_dir, filename),
                                 "rb")
-                distort_noise_data.append(
+                NoiseLib.distort_noise_data.append(
                     wf2.readframes(wf2.getparams().nframes))
         except:
             logging.info("Can't find noise file pairs")
             # raise TypeError("Can't find noise file pairs")
+        # print(type(NoiseLib.raw_noise_data[0]))
+        # print(len(NoiseLib.raw_noise_data[0]))
+        # print(NoiseLib.raw_noise_data[0][0:10])
 
     def update_noise(self):
         NoiseLib.random_factor = np.random.rand(NoiseLib.num_of_base)
 
+    @classmethod
+    def read_raw_noise_frames(cls,index,frame_count):
+        re = cls.raw_noise_data[index][0:frame_count]
+        tmp = bytearray(cls.raw_noise_data[index])
+        del tmp[0:frame_count]
+        cls.raw_noise_data[index] = bytes(tmp)
+        return re
+
     # 获取浮点数类型的单声道的噪声信号
     @classmethod
-    def get_noise_clip_single_channel(cls, frame_of_noise):
-        w_bases = np.linspace(NoiseLib.f_lower_bound, NoiseLib.f_upper_bound,
-                              NoiseLib.num_of_base)
+    def get_noise_clip(cls, frame_of_noise):
+        w_bases = np.linspace(cls.f_lower_bound, cls.f_upper_bound,
+                              cls.num_of_base)
         re = np.zeros(shape=(frame_of_noise))
         t = np.linspace(0, frame_of_noise / settings.FS, num=frame_of_noise)
-        for i in range(NoiseLib.num_of_base):
-            re += NoiseLib.random_factor[i] * np.sin(
+        for i in range(cls.num_of_base):
+            re += cls.random_factor[i] * np.sin(
                 2 * np.pi * w_bases[i] * t)
         return re / np.max(np.abs(re))  # 归一化
