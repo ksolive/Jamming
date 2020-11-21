@@ -3,6 +3,7 @@ import logging, sys, time, os, datetime
 
 from modules.noise_lib import NoiseLib
 from modules.io_manager import IOManager
+import global_var
 
 def run():
     # 启动程序
@@ -20,9 +21,8 @@ def run():
 
     # 停止程序
     logging.info("Stop jamming programmer")
-    io_threads.stop()
     noiselib_thread.stop()
-
+    io_threads.stop()
 
 
 def config_logging():
