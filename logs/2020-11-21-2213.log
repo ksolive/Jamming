@@ -1,4 +1,0 @@
-2020-11-21 22:13:35,482 main.py[line:47] INFO: Current log file F:\下载\智能音箱\Env\logs\2020-11-21-2213.log
-2020-11-21 22:13:35,483 main.py[line:11] INFO: Start jamming programmer
-2020-11-21 22:13:35,602 io_manager.py[line:37] WARNING: No output device detected!
-2020-11-21 22:13:45,970 main.py[line:23] INFO: Stop jamming programmer
