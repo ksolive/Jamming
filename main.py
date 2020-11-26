@@ -13,7 +13,7 @@ def run():
     # 启动程序
     config_logging()
     logging.info("Start jamming programmer")
-    # _ = Modulate()
+    _ = Modulate()
     noiselib_thread = NoiseLib()
     io_threads = IOManager()
 
