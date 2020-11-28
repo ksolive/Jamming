@@ -6,6 +6,8 @@ import numpy as np
 from modules.modulate import Modulate
 from modules.noise_lib import NoiseLib
 from modules.io_manager import IOManager
+from modules.ars import ASRManager
+
 import global_var
 import settings
 
@@ -16,6 +18,10 @@ def run():
     _ = Modulate()
     noiselib_thread = NoiseLib()
     io_threads = IOManager()
+    # asr默认初始化两个进程进行
+    asr_Manager = ASRManager()
+    asr_Manager.create_asr_thread()
+    asr_Manager.create_asr_thread()
 
     try:
         plt.ion()
@@ -27,6 +33,7 @@ def run():
         logging.info("Stop jamming programmer")
         noiselib_thread.stop()
         io_threads.stop()
+        asr_Manager.kill_all()
 
 def config_logging():
     if not os.path.exists("logs"):
